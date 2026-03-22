@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property name="LOG_HOME" value="${AppData}/app.pandev.mw.get-track-info-green"/>
+  <property name="DEFAULT_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>${LOG_HOME}/app.log</file>
+    <append>true</append>
+    <encoder>
+      <pattern>${DEFAULT_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+  <root level="WARN">
+    <appender-ref ref="FILE"/>
+  </root>
+</configuration>
