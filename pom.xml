@@ -148,7 +148,7 @@
         </executions>
         <configuration>
           <mainClass>app.pandev.mw.get_track_info_green.Main</mainClass>
-          <imageName>win-x64/mw-green-bridge</imageName>
+          <imageName>win-x64/${artifactId}</imageName>
           <buildArgs>
             <buildArg>--enable-native-access=ALL-UNNAMED</buildArg>
             <buildArg>--enable-url-protocols=https</buildArg>
