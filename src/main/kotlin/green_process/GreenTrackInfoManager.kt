@@ -1,14 +1,14 @@
 package app.pandev.mw.get_track_info_green.green_process
 
-import app.pandev.mw.get_track_info_green.core.json.ErrorJsonResponse
-import app.pandev.mw.get_track_info_green.core.json.OkJsonResponse
-import app.pandev.mw.get_track_info_green.track_info.graphql.TrackInfo
-import app.pandev.mw.get_track_info_green.track_info.persistent_cache.PersistentTrackInfoCache
-import app.pandev.mw.get_track_info_green.track_info.persistent_cache.PersistentTrackInfoCacheItem
+import app.pandev.mw.get_track_info_green.track_info.TrackInfo
+import app.pandev.mw.get_track_info_green.json.ErrorJsonResponse
+import app.pandev.mw.get_track_info_green.json.OkJsonResponse
 import com.google.gson.Gson
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import de.labystudio.spotifyapi.open.OpenSpotifyAPI
 import de.labystudio.spotifyapi.open.model.GraphQLOperation
+import de.labystudio.spotifyapi.open.model.track.TrackResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
@@ -17,15 +17,23 @@ import java.net.UnknownHostException
 class GreenTrackInfoManager {
   private val logger: Logger = LoggerFactory.getLogger(GreenTrackInfoManager::class.java)
 
-  private var trackInfoCache: PersistentTrackInfoCache? = null
+  private val gson = Gson()
+  private val readApiKeysDocsMsg = "Please read the \"About API keys (TOTP secrets)\" section in the Github docs."
+
   private var localApi: GreenProcess? = null
   private var openApi: OpenSpotifyAPI? = null
 
   private var initialized: Boolean = false
 
-  constructor() {
+  private var includeExtraData = false
+
+  constructor(
+    includeExtraData: Boolean = false,
+  ) {
+
+    this.includeExtraData = includeExtraData
+
     try {
-      trackInfoCache = PersistentTrackInfoCache()
       localApi = GreenProcess()
 
       val openApiKeys = GreenApiKeysManager.getKeys() ?: throw Exception("Empty API keys for Spotify")
@@ -38,7 +46,7 @@ class GreenTrackInfoManager {
   }
 
   fun isInitialized(): Boolean {
-    return initialized && trackInfoCache != null && localApi != null && openApi != null
+    return initialized && localApi != null && openApi != null
   }
 
   fun getCurrentTrackId(): String? {
@@ -55,64 +63,35 @@ class GreenTrackInfoManager {
   }
 
   fun outputTrackInfo(
-    useCache: Boolean,
-    trackId: String?
+    trackId: String? = null
   ) {
     if (!initialized) {
       return
     }
 
     if (trackId.isNullOrEmpty()) {
-      outputErrorJsonResponse("Could not find the track ID for the current track. Is Spotify currently running in your PC?")
+      outputErrorJsonResponse("Could not find the track ID for the current track. Is Spotify currently running on your PC?")
       return
     }
 
     // Manually assert as not null
-    val trackInfoCache = trackInfoCache
     val localApi = localApi
     val openApi = openApi
-    if (trackInfoCache == null || localApi == null || openApi == null) {
+    if (localApi == null || openApi == null) {
       return
     }
 
-    try {
-      if (useCache) {
-        val cachedTrackInfoItem: PersistentTrackInfoCacheItem? = trackInfoCache.get(trackId)
-        if (cachedTrackInfoItem != null) {
-          outputOkJsonResponseFromTrackInfoCacheItem(cachedTrackInfoItem)
-          return
-        }
-      }
-    } catch (e: Exception) {
-      outputErrorJsonResponse(e, trackId)
-    }
+    val trackInfo = getTrackInfoFromOpenApi(trackId) ?: return
 
-    val outputJson = getOutputJsonStringFromOpenApi(trackId)
-    try {
-      if (useCache && outputJson != null) {
-        trackInfoCache.add(PersistentTrackInfoCacheItem(trackId, outputJson))
-      }
-    } catch (e: Exception) {
-      outputErrorJsonResponse(e, trackId)
-    }
-  }
-
-  private fun outputOkJsonResponseFromTrackInfo(trackInfo: TrackInfo): String {
-    val jsonResponse = OkJsonResponse(
-      "ok",
-      trackInfo.data.trackUnion.id,
-      trackInfo.data.trackUnion
+    // Output the full data to stdout
+    println(
+      gson.toJson(
+        OkJsonResponse(
+          "ok",
+          trackInfo
+        )
+      )
     )
-
-    val gson = Gson()
-    val jsonOutput = gson.toJson(jsonResponse)
-    println(jsonOutput)
-
-    return jsonOutput
-  }
-
-  private fun outputOkJsonResponseFromTrackInfoCacheItem(trackInfo: PersistentTrackInfoCacheItem) {
-    println(trackInfo.json_data)
   }
 
   private fun outputErrorJsonResponse(e: Exception, trackId: String? = null) {
@@ -124,7 +103,6 @@ class GreenTrackInfoManager {
       trackId
     )
 
-    val gson = Gson()
     val jsonOutput = gson.toJson(jsonResponse)
     println(jsonOutput)
   }
@@ -138,28 +116,90 @@ class GreenTrackInfoManager {
       trackId
     )
 
-    val gson = Gson()
     val jsonOutput = gson.toJson(jsonResponse)
     println(jsonOutput)
   }
 
 
-  private fun getOutputJsonStringFromOpenApi(trackId: String): String? {
-    val readApiKeysDocsMsg = "Please read the \"About API keys (TOTP secrets)\" section in the Github docs."
+  private fun getTrackInfoFromOpenApi(trackId: String): TrackInfo? {
     try {
-      val variables = JsonObject()
-      variables.addProperty("uri", "spotify:track:$trackId")
-      val trackInfo = openApi?.requestGraphQL(GraphQLOperation.GET_TRACK, variables, TrackInfo::class.java)
-      if (trackInfo == null) {
+      val graphqlRequestVars = JsonObject()
+      graphqlRequestVars.addProperty("uri", "spotify:track:$trackId")
+
+      var graphqlRawTrackInfo =
+        openApi?.requestGraphQL(GraphQLOperation.GET_TRACK, graphqlRequestVars, JsonElement::class.java)
+
+      if (graphqlRawTrackInfo == null) {
         outputErrorJsonResponse("Empty data from the Spotify API request.")
         return null
       }
-      return outputOkJsonResponseFromTrackInfo(trackInfo)
+
+      graphqlRawTrackInfo = getTrueTrackInfoFromOpenApi(trackId, graphqlRawTrackInfo)
+
+      val graphqlTrackInfo = gson
+        .fromJson(graphqlRawTrackInfo, TrackResponse::class.java)
+
+      if (graphqlTrackInfo == null) {
+        outputErrorJsonResponse("Could not serialize data from the Spotify API request.")
+        return null
+      }
+
+      return TrackInfo.create(
+        trackId = trackId,
+        rawJson = graphqlRawTrackInfo,
+        deserializedJson = graphqlTrackInfo,
+        includeExtraData = includeExtraData
+      )
+
     } catch (_: UnknownHostException) {
       outputErrorJsonResponse("Failed to perform an HTTP request to Spotify. Unreachable host.")
     } catch (_: IOException) {
       outputErrorJsonResponse("Failed to perform an HTTP request to Spotify. $readApiKeysDocsMsg")
     }
     return null
+  }
+
+  private fun getTrueTrackInfoFromOpenApi(trackId: String, graphqlRawTrackInfo: JsonElement): JsonElement {
+    try {
+      val audioAssociations = graphqlRawTrackInfo.asJsonObject
+        ?.get("data")?.asJsonObject
+        ?.get("trackUnion")?.asJsonObject
+        ?.get("associationsV3")?.asJsonObject
+        ?.get("audioAssociations")?.asJsonObject
+        ?.get("items")?.asJsonArray
+
+      if (audioAssociations == null || audioAssociations.size() <= 0) {
+        return graphqlRawTrackInfo
+      }
+
+      val associatedTrackUri = audioAssociations.firstOrNull()?.asJsonObject
+        ?.get("trackAudio")?.asJsonObject
+        ?.get("data")?.asJsonObject
+        ?.get("uri")?.asString
+
+      if (associatedTrackUri == null || associatedTrackUri.contains(trackId)) {
+        return graphqlRawTrackInfo
+      }
+
+      // If we are here it means the original track was probably a video,
+      // so we need to fetch the data for the actual track
+      val newGraphqlRequestVars = JsonObject()
+      newGraphqlRequestVars.addProperty("uri", associatedTrackUri)
+      val newGraphqlRawTrackInfo =
+        openApi?.requestGraphQL(GraphQLOperation.GET_TRACK, newGraphqlRequestVars, JsonElement::class.java)
+
+      // If we can't find anything just default to the video data
+      if (newGraphqlRawTrackInfo == null) {
+        return graphqlRawTrackInfo
+      }
+
+      return newGraphqlRawTrackInfo
+
+    } catch (_: UnknownHostException) {
+      outputErrorJsonResponse("Failed to perform an HTTP request to Spotify. Unreachable host.")
+    } catch (_: IOException) {
+      outputErrorJsonResponse("Failed to perform an HTTP request to Spotify. $readApiKeysDocsMsg")
+    }
+    return graphqlRawTrackInfo
   }
 }

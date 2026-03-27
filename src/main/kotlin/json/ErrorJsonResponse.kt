@@ -1,4 +1,4 @@
-package app.pandev.mw.get_track_info_green.core.json
+package app.pandev.mw.get_track_info_green.json
 
 data class ErrorJsonResponse(
   val status: String,

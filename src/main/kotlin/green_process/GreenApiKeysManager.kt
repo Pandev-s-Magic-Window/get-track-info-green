@@ -1,9 +1,8 @@
 package app.pandev.mw.get_track_info_green.green_process
 
 import app.pandev.mw.get_track_info_green.Config
-import app.pandev.mw.get_track_info_green.green_process.json.ApiKeysFromUrlResponse
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.google.gson.JsonElement
 import de.labystudio.spotifyapi.open.totp.model.Secret
 import de.labystudio.spotifyapi.open.totp.provider.DefaultSecretProvider
 import org.slf4j.Logger
@@ -12,6 +11,7 @@ import org.tomlj.Toml
 import org.tomlj.TomlParseError
 import java.io.File
 import java.io.IOException
+import java.net.URI
 import java.nio.file.Paths
 import java.util.function.Consumer
 
@@ -89,18 +89,26 @@ class GreenApiKeysManager {
 
     private fun getFromBackupUrl(): DefaultSecretProvider? {
       try {
-        val jsonText = Paths
-          .get(backupUrlForApiKeys)
-          .toUri()
+        val rawJsonResponseStr = URI
+          .create(backupUrlForApiKeys)
           .toURL()
           .readText()
 
-        val listType = object : TypeToken<List<ApiKeysFromUrlResponse>>() {}.type
-        val keysList: List<ApiKeysFromUrlResponse> = Gson().fromJson(jsonText, listType)
-        val keys = keysList.firstOrNull()
-        if (keys != null) {
-          return DefaultSecretProvider(Secret.fromString(keys.secret, keys.version))
+        val rawJsonResponse = Gson().fromJson(rawJsonResponseStr, JsonElement::class.java) ?: return null
+
+        val rawKeysList = rawJsonResponse.asJsonArray
+        if (rawKeysList == null || rawKeysList.size() == 0) {
+          return null
         }
+
+        val apiKeysList = rawKeysList.mapNotNull { it.asJsonObject }
+        val sortedApiKeysList = apiKeysList.sortedByDescending { it.get("version")?.asString }
+        val mostRecentApiKeys = sortedApiKeysList.firstOrNull() ?: return null
+
+        val secret = mostRecentApiKeys.get("secret")?.asString ?: return null
+        val version = mostRecentApiKeys.get("version")?.asString ?: return null
+
+        return DefaultSecretProvider(Secret.fromString(secret, version.toInt()))
       } catch (e: Exception) {
         logger.error(e.toString())
       }

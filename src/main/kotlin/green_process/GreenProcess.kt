@@ -31,8 +31,7 @@ class GreenProcess {
   }
 
   private fun getCurrentTrackIdForWindows(): String? {
-    val process = winSpotifyProcess
-    if (!SystemUtils.IS_OS_WINDOWS || process == null) {
+    if (!SystemUtils.IS_OS_WINDOWS) {
       return null
     }
 
@@ -46,6 +45,12 @@ class GreenProcess {
       }
     } catch (e: Exception) {
       logger.error(e.message, e)
+      return null
+    }
+
+    val process = winSpotifyProcess
+    if (process == null) {
+      logger.error("Spotify.exe is not running!")
       return null
     }
 
@@ -63,7 +68,8 @@ class GreenProcess {
   }
 
   private fun getCurrentTrackIdForLinux(): String? {
-    val process = linuxSpotifyProcess
+    // TODO: Will complete when needed
+    /*val process = linuxSpotifyProcess
     if (!SystemUtils.IS_OS_LINUX || process == null) {
       return null
     }
@@ -71,7 +77,7 @@ class GreenProcess {
       return process.track?.id
     } catch (e: Exception) {
       logger.error(e.toString(), e)
-    }
+    }*/
     return null
   }
 

@@ -43,6 +43,13 @@
         <version>3.0.0</version>
         <executions>
           <execution>
+            <id>generateGraalReflectionConfig</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+          <execution>
             <id>java-agent</id>
             <phase>test</phase>
             <goals>
@@ -54,13 +61,26 @@
               <arguments>
                 <argument>-classpath</argument>
                 <classpath />
-                <argument>app.pandev.mw.get_track_info_green.native_image.MappingGenerator</argument>
+                <argument>app.pandev.mw.get_track_info_green.graalvm_native_image.MappingGenerator</argument>
               </arguments>
             </configuration>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli-codegen</artifactId>
+            <version>4.7.7</version>
+          </dependency>
+        </dependencies>
         <configuration>
-          <mainClass>MainKt</mainClass>
+          <includeProjectDependencies>true</includeProjectDependencies>
+          <includePluginDependencies>true</includePluginDependencies>
+          <mainClass>picocli.codegen.aot.graalvm.ReflectionConfigGenerator</mainClass>
+          <arguments>
+            <argument>--output=target/classes/META-INF/native-image/${project.groupId}/${project.artifactId}/reflect-config.json</argument>
+            <argument>app.pandev.mw.get_track_info_green.CliArgs</argument>
+          </arguments>
         </configuration>
       </plugin>
       <plugin>
@@ -119,12 +139,12 @@
         </executions>
         <configuration>
           <mainClass>app.pandev.mw.get_track_info_green.Main</mainClass>
-          <imageName>win-x64/${artifactId}</imageName>
+          <imageName>win-x64/${project.artifactId}</imageName>
           <buildArgs>
             <buildArg>--enable-native-access=ALL-UNNAMED</buildArg>
             <buildArg>--enable-url-protocols=https</buildArg>
             <buildArg>-H:+UnlockExperimentalVMOptions</buildArg>
-            <buildArg>-H:Preserve=package=de.labystudio.spotifyapi.open.model.*,package=app.pandev.mw.get_track_info_green.track_info.graphql.*,package=app.pandev.mw.get_track_info_green.core.json,package=app.pandev.mw.get_track_info_green.green_process.json</buildArg>
+            <buildArg>-H:Preserve=package=de.labystudio.spotifyapi.*,package=app.pandev.mw.get_track_info_green.*</buildArg>
           </buildArgs>
           <agent>
             <enabled>true</enabled>
@@ -134,7 +154,6 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>9</source>
           <target>9</target>
         </configuration>
       </plugin>

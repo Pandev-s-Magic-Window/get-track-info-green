@@ -8,9 +8,14 @@ import java.util.*
 class App {
   private val logger: Logger = LoggerFactory.getLogger(App::class.java)
 
-  constructor() {
+  constructor(
+    includeExtraData: Boolean = false,
+  ) {
     try {
-      val tim = GreenTrackInfoManager()
+
+      val tim = GreenTrackInfoManager(
+        includeExtraData = includeExtraData
+      )
       if (!tim.isInitialized()) {
         return
       }
@@ -24,8 +29,7 @@ class App {
           break
         }
         tim.outputTrackInfo(
-          true,
-          tim.getCurrentTrackId()
+          trackId = tim.getCurrentTrackId()
         )
       }
       scanner.close()

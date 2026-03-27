@@ -6,7 +6,7 @@
 
   <groupId>app.pandev.mw</groupId>
   <artifactId>mw-get-track-info-green</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -66,10 +66,14 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.0.0</version>
-        <configuration>
-          <mainClass>MainKt</mainClass>
-        </configuration>
         <executions>
+          <execution>
+            <id>generateGraalReflectionConfig</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
           <execution>
             <id>java-agent</id>
             <goals>
@@ -82,36 +86,28 @@
               <arguments>
                 <argument>-classpath</argument>
                 <classpath/>
-                <argument>app.pandev.mw.get_track_info_green.native_image.MappingGenerator</argument>
+                <argument>app.pandev.mw.get_track_info_green.graalvm_native_image.MappingGenerator</argument>
               </arguments>
             </configuration>
           </execution>
         </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.6.2</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <transformers>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>app.pandev.mw.get_track_info_green.Main</mainClass>
-                </transformer>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                  <resource>META-INF/services/java.sql.Driver</resource>
-                </transformer>
-              </transformers>
-            </configuration>
-          </execution>
-        </executions>
+        <configuration>
+          <includeProjectDependencies>true</includeProjectDependencies>
+          <includePluginDependencies>true</includePluginDependencies>
+          <mainClass>picocli.codegen.aot.graalvm.ReflectionConfigGenerator</mainClass>
+          <arguments>
+            <argument>--output=target/classes/META-INF/native-image/${project.groupId}/${project.artifactId}/reflect-config.json</argument>
+            <argument>app.pandev.mw.get_track_info_green.CliArgs</argument>
+          </arguments>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli-codegen</artifactId>
+            <version>4.7.7</version>
+            <type>jar</type>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <plugin>
@@ -148,14 +144,14 @@
         </executions>
         <configuration>
           <mainClass>app.pandev.mw.get_track_info_green.Main</mainClass>
-          <imageName>win-x64/${artifactId}</imageName>
+          <imageName>win-x64/${project.artifactId}</imageName>
           <buildArgs>
             <buildArg>--enable-native-access=ALL-UNNAMED</buildArg>
             <buildArg>--enable-url-protocols=https</buildArg>
             <buildArg>-H:+UnlockExperimentalVMOptions</buildArg>
-            <!-- We need to preserve the metadata for all the following packages or else GSON will fail -->
+            <!-- Preserve the metadata for the following packages to use for reflection in the EXE -->
             <buildArg>
-              -H:Preserve=package=de.labystudio.spotifyapi.open.model.*,package=app.pandev.mw.get_track_info_green.track_info.graphql.*,package=app.pandev.mw.get_track_info_green.core.json,package=app.pandev.mw.get_track_info_green.green_process.json
+              -H:Preserve=package=de.labystudio.spotifyapi.open.model.*,package=app.pandev.mw.get_track_info_green.json.*,package=app.pandev.mw.get_track_info_green.track_info.*
             </buildArg>
           </buildArgs>
           <agent>
@@ -163,6 +159,7 @@
           </agent>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -171,7 +168,9 @@
           <target>9</target>
         </configuration>
       </plugin>
+
     </plugins>
+
   </build>
 
   <dependencies>
@@ -198,11 +197,6 @@
       <version>1.5.1</version>
     </dependency>
     <dependency>
-      <groupId>org.xerial</groupId>
-      <artifactId>sqlite-jdbc</artifactId>
-      <version>3.51.2.0</version>
-    </dependency>
-    <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
       <version>2.13.2</version>
@@ -221,6 +215,11 @@
       <groupId>org.tomlj</groupId>
       <artifactId>tomlj</artifactId>
       <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+      <version>4.7.7</version>
     </dependency>
   </dependencies>
 
