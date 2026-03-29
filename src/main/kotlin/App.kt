@@ -1,6 +1,8 @@
 package app.pandev.mw.get_track_info_green
 
 import app.pandev.mw.get_track_info_green.green_process.GreenTrackInfoManager
+import com.google.gson.Gson
+import com.google.gson.JsonElement
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -28,13 +30,27 @@ class App {
         if (line.equals("exit", ignoreCase = true)) {
           break
         }
+
+        val requestId = parseRequestId(line)
+
         tim.outputTrackInfo(
-          trackId = tim.getCurrentTrackId()
+          trackId = tim.getCurrentTrackId(),
+          requestId
         )
       }
       scanner.close()
     } catch (e: Exception) {
       logger.error(e.toString(), e)
     }
+  }
+
+  private fun parseRequestId(line: String): String? {
+    try {
+      val parsedLine = Gson().fromJson(line, JsonElement::class.java)
+
+      return parsedLine.asJsonObject.get("request_id").asString
+    } catch (_: Exception) {
+    }
+    return null
   }
 }

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5eeb6809-ad29-4259-9875-9550c1136064" name="Changes" comment="Release v1.1.0&#10;- Implement response parity with get-track-info-orange.&#10;- Implement extra data field via GraphQL call (this is related to response parity), which can be enabled via cli param.&#10;- Remove persistent cache (cache will now be handled by get-track-info-core, for both green and orange get-track-info).&#10;- General code cleanup.">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/d82cc278-31d2-45b5-838e-eb3c6e66b36f.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/d82cc278-31d2-45b5-838e-eb3c6e66b36f/storage_v2/_src_/schema/main.uQUzAA.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/json/OkJsonResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/App.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/App.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/core/json/OkJsonResponse.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/green_process/GreenTrackInfoManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/green_process/GreenTrackInfoManager.kt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Kotlin Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;la-pandev&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Pandev-s-Magic-Window/get-track-info-green.git&quot;,
+    &quot;accountId&quot;: &quot;18f50854-4730-4c25-922b-d30d7540c4c4&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="3BNZE1c6G8hKXy5zb1nS2xHXCSb" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JUnit.ExampleTest.can fetch data from spotify.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ExampleTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.GreenTrackInfoManagerTest.executor&quot;: &quot;Run&quot;,
+    &quot;Kotlin.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.mw-get-track-info-green [package].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlite&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="K2MoveDeclarationsDialog.RECENT_PACKAGE_KEY">
+      <recent name="app.pandev.mw.get_track_info_green.track_info" />
+      <recent name="app.pandev.mw.get_track_info_green.json" />
+      <recent name="app.pandev.mw.get_track_info_green" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Kotlin.Main">
+    <configuration name="GreenTrackInfoManagerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mw-get-track-info-green" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="GreenTrackInfoManagerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GreenTrackInfoManagerTest.can fetch data from spotify" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mw-get-track-info-green" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="GreenTrackInfoManagerTest" />
+      <option name="METHOD_NAME" value="can fetch data from spotify" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Main" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="app.pandev.mw.get_track_info_green.Main" />
+      <module name="mw-get-track-info-green" />
+      <option name="PROGRAM_PARAMETERS" value="--include-extra-data=false" />
+      <shortenClasspath name="NONE" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="mw-get-track-info-green [package]" type="MavenRunConfiguration" factoryName="Maven" temporary="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="package" />
+              </list>
+            </option>
+            <option name="multimoduleDir" />
+            <option name="pomFileName" value="pom.xml" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="JUnit.GreenTrackInfoManagerTest" />
+      <item itemvalue="JUnit.GreenTrackInfoManagerTest.can fetch data from spotify" />
+      <item itemvalue="Kotlin.Main" />
+      <item itemvalue="Maven.mw-get-track-info-green [package]" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Kotlin.Main" />
+        <item itemvalue="Maven.mw-get-track-info-green [package]" />
+        <item itemvalue="JUnit.GreenTrackInfoManagerTest.can fetch data from spotify" />
+        <item itemvalue="JUnit.GreenTrackInfoManagerTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5eeb6809-ad29-4259-9875-9550c1136064" name="Changes" comment="" />
+      <created>1774331374148</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1774331374148</updated>
+      <workItem from="1774331376103" duration="9304000" />
+      <workItem from="1774344283290" duration="11934000" />
+      <workItem from="1774357417892" duration="12393000" />
+      <workItem from="1774372713138" duration="8997000" />
+      <workItem from="1774629940989" duration="5533000" />
+      <workItem from="1774651386314" duration="6476000" />
+      <workItem from="1774816594181" duration="308000" />
+    </task>
+    <task id="LOCAL-00001" summary="Release v1.1.0&#10;- Implement response parity with get-track-info-orange.&#10;- Implement extra data field via GraphQL call (this is related to response parity), which can be enabled via cli param.&#10;- Remove persistent cache (cache will now be handled by get-track-info-core, for both green and orange get-track-info).&#10;- General code cleanup.">
+      <option name="closed" value="true" />
+      <created>1774635654165</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1774635654166</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Release v1.1.0&#10;- Implement response parity with get-track-info-orange.&#10;- Implement extra data field via GraphQL call (this is related to response parity), which can be enabled via cli param.&#10;- Remove persistent cache (cache will now be handled by get-track-info-core, for both green and orange get-track-info).&#10;- General code cleanup." />
+    <option name="LAST_COMMIT_MESSAGE" value="Release v1.1.0&#10;- Implement response parity with get-track-info-orange.&#10;- Implement extra data field via GraphQL call (this is related to response parity), which can be enabled via cli param.&#10;- Remove persistent cache (cache will now be handled by get-track-info-core, for both green and orange get-track-info).&#10;- General code cleanup." />
+  </component>
+</project>

@@ -63,7 +63,8 @@ class GreenTrackInfoManager {
   }
 
   fun outputTrackInfo(
-    trackId: String? = null
+    trackId: String? = null,
+    requestId: String? = null,
   ) {
     if (!initialized) {
       return
@@ -88,6 +89,7 @@ class GreenTrackInfoManager {
       gson.toJson(
         OkJsonResponse(
           "ok",
+          requestId,
           trackInfo
         )
       )
