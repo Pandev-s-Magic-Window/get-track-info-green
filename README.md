@@ -47,6 +47,7 @@ To get data, just press enter. If there is a track playing on your Spotify, you'
 ```
 {
   "status": "ok",
+  "request_id": "YOUR_REQUEST_ID",
   "data": {
     "track_id": "0E0DRHf5PfMeor0ZCwB3oT",
     "track_name": "Otro Atardecer",
@@ -60,6 +61,8 @@ To get data, just press enter. If there is a track playing on your Spotify, you'
   }
 }
 ```
+
+To pass an optional request ID you need to input a message like this one: `{"request_id": "YOUR_REQUEST_ID"}"`
 
 <details>
   <summary>Click here to see a sample response from GraphQL endpoint "getTrack"</summary>
