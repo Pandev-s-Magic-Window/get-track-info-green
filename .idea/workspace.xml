@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5eeb6809-ad29-4259-9875-9550c1136064" name="Changes" comment="Release v1.1.0&#10;- Implement response parity with get-track-info-orange.&#10;- Implement extra data field via GraphQL call (this is related to response parity), which can be enabled via cli param.&#10;- Remove persistent cache (cache will now be handled by get-track-info-core, for both green and orange get-track-info).&#10;- General code cleanup.">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/d82cc278-31d2-45b5-838e-eb3c6e66b36f.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/d82cc278-31d2-45b5-838e-eb3c6e66b36f/storage_v2/_src_/schema/main.uQUzAA.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/json/OkJsonResponse.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/App.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/App.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/core/json/OkJsonResponse.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/green_process/GreenTrackInfoManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/green_process/GreenTrackInfoManager.kt" afterDir="false" />
+    <list default="true" id="5eeb6809-ad29-4259-9875-9550c1136064" name="Changes" comment="Release v1.2.0&#10;- Implement optional request ID in input request">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,7 +168,7 @@
       <workItem from="1774372713138" duration="8997000" />
       <workItem from="1774629940989" duration="5533000" />
       <workItem from="1774651386314" duration="6476000" />
-      <workItem from="1774816594181" duration="308000" />
+      <workItem from="1774816594181" duration="695000" />
     </task>
     <task id="LOCAL-00001" summary="Release v1.1.0&#10;- Implement response parity with get-track-info-orange.&#10;- Implement extra data field via GraphQL call (this is related to response parity), which can be enabled via cli param.&#10;- Remove persistent cache (cache will now be handled by get-track-info-core, for both green and orange get-track-info).&#10;- General code cleanup.">
       <option name="closed" value="true" />
@@ -184,7 +178,15 @@
       <option name="project" value="LOCAL" />
       <updated>1774635654166</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Release v1.2.0&#10;- Implement optional request ID in input request">
+      <option name="closed" value="true" />
+      <created>1774817099555</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1774817099555</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -192,6 +194,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Release v1.1.0&#10;- Implement response parity with get-track-info-orange.&#10;- Implement extra data field via GraphQL call (this is related to response parity), which can be enabled via cli param.&#10;- Remove persistent cache (cache will now be handled by get-track-info-core, for both green and orange get-track-info).&#10;- General code cleanup." />
-    <option name="LAST_COMMIT_MESSAGE" value="Release v1.1.0&#10;- Implement response parity with get-track-info-orange.&#10;- Implement extra data field via GraphQL call (this is related to response parity), which can be enabled via cli param.&#10;- Remove persistent cache (cache will now be handled by get-track-info-core, for both green and orange get-track-info).&#10;- General code cleanup." />
+    <MESSAGE value="Release v1.2.0&#10;- Implement optional request ID in input request" />
+    <option name="LAST_COMMIT_MESSAGE" value="Release v1.2.0&#10;- Implement optional request ID in input request" />
   </component>
 </project>
